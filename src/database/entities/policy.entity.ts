@@ -1,14 +1,12 @@
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 import { BaseEntityWithSoftDelete } from './entity';
-import { Invoice } from './invoice.entity';
+// import { Invoice } from './invoice.entity';
+import { PolicyPaymentFrequency } from '../../shared/enums';
 
-@Entity()
+@Entity('policies')
 export class Policy extends BaseEntityWithSoftDelete {
-  @Column()
+  @Column({ type: String, length: 64 })
   vehicleModel: string;
-
-  @Column()
-  vehicleYear: number;
 
   @Column()
   vehiclePlateNumber: string;
@@ -25,22 +23,34 @@ export class Policy extends BaseEntityWithSoftDelete {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   deductibleAmount: number;
 
-  @Column('date')
+  @Column({ type: 'timestamptz' })
   startDate: Date;
 
-  @Column('date')
+  @Column({ type: 'timestamptz' })
   endDate: Date;
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   isActive: boolean;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  rejectedAt: Date;
+
+  @Column({ type: String, length: 2400, nullable: true })
+  rejectedReason: string;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  cancledAt: Date;
+
+  @Column({ type: String, length: 2400, nullable: true })
+  cancledReason: string;
 
   @Column({
     type: 'enum',
-    enum: ['MONTHLY', 'QUARTERLY', 'SEMI_ANNUAL', 'ANNUAL'],
-    default: 'MONTHLY',
+    enum: PolicyPaymentFrequency,
+    default: PolicyPaymentFrequency.MONTHLY,
   })
-  paymentFrequency: string;
+  paymentFrequency: PolicyPaymentFrequency;
 
-  @OneToMany(() => Invoice, (invoice) => invoice.policy)
-  invoices: Invoice[];
+  // @OneToMany(() => Invoice, (invoice) => invoice.policy)
+  // invoices: Invoice[];
 }

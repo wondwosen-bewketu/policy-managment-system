@@ -1,8 +1,8 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Policy } from './policy.entity';
+import { Entity, Column } from 'typeorm';
+// import { Policy } from './policy.entity';
 import { BaseEntityWithSoftDelete } from './entity';
 
-@Entity()
+@Entity('invoices')
 export class Invoice extends BaseEntityWithSoftDelete {
   @Column()
   invoiceNumber: string;
@@ -25,7 +25,7 @@ export class Invoice extends BaseEntityWithSoftDelete {
   @Column({ type: 'varchar', length: 50, default: 'PENDING' })
   status: string;
 
-  @ManyToOne(() => Policy, (policy) => policy.invoices)
-  @JoinColumn({ name: 'policyId' })
-  policy: Policy;
+  // @ManyToOne(() => Policy, (policy) => policy.invoices)
+  // @JoinColumn()
+  // policy: Policy;
 }

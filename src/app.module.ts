@@ -1,16 +1,18 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
-import appConfig from './config/app.config';
+import { appConfig, databaseConfig } from './config';
+import { PolicyModule } from './modules';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Make it available across the app
-      load: [appConfig],
-      envFilePath: ['.env'], // Load environment variables
+      isGlobal: true,
+      load: [appConfig, databaseConfig],
+      envFilePath: ['.env'],
     }),
-    DatabaseModule, // Import database module
+    DatabaseModule,
+    PolicyModule,
   ],
 })
 export class AppModule {}

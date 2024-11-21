@@ -5,5 +5,5 @@ export type DatabaseConfigType = {
   port: number;
   username: string;
   password: string;
-  name: string;
+  database: string;
 };

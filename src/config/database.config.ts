@@ -1,22 +1,23 @@
 // database.config.ts
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { DatabaseConfigType } from './types';
+import { registerAs } from '@nestjs/config';
 
 @Injectable()
 export class DatabaseConfigService {
-  constructor(
-    private readonly configService: ConfigService<DatabaseConfigType>,
-  ) {}
-
-  getDatabaseConfig() {
+  getDatabaseConfig(): DatabaseConfigType {
     return {
-      type: this.configService.get<string>('type', { infer: true }),
-      host: this.configService.get<string>('host', { infer: true }),
-      port: this.configService.get<number>('port', { infer: true }),
-      username: this.configService.get<string>('username', { infer: true }),
-      password: this.configService.get<string>('password', { infer: true }),
-      database: this.configService.get<string>('name', { infer: true }),
+      type: process.env.DATABASE_TYPE,
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
     };
   }
 }
+
+export default registerAs<DatabaseConfigType>('database', () => {
+  const configService = new DatabaseConfigService();
+  return configService.getDatabaseConfig();
+});
