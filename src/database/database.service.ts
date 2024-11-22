@@ -1,4 +1,3 @@
-// src/database/database.service.ts
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
@@ -19,7 +18,12 @@ export class DatabaseService implements TypeOrmOptionsFactory {
       database: this.configService.get('database.database', { infer: true }),
       autoLoadEntities: true,
       synchronize: this.configService.get('app.nodeEnv', { infer: true }),
-      logging: this.configService.get('app.appName', { infer: true }),
+      dropSchema: false,
+      keepConnectionAlive: true,
+      logging:
+        this.configService.get('app.nodeEnv', { infer: true }) !== 'production',
+      entities: ['dist/database/entities/*{.entity.js,.entity.ts}'],
+      migrations: ['dist/database/migrations/**/*{.ts,.js}'],
     } as TypeOrmModuleOptions;
   }
 }

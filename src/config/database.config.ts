@@ -1,4 +1,3 @@
-// database.config.ts
 import { Injectable } from '@nestjs/common';
 import { DatabaseConfigType } from './types';
 import { registerAs } from '@nestjs/config';

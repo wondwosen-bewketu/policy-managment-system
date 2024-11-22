@@ -1,7 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntityWithSoftDelete } from './entity';
-// import { Invoice } from './invoice.entity';
-import { PolicyPaymentFrequency } from '../../shared/enums';
+import { PaymentFrequency } from '../../shared/enums';
+import { Invoice } from './invoice.entity';
 
 @Entity('policies')
 export class Policy extends BaseEntityWithSoftDelete {
@@ -46,11 +46,11 @@ export class Policy extends BaseEntityWithSoftDelete {
 
   @Column({
     type: 'enum',
-    enum: PolicyPaymentFrequency,
-    default: PolicyPaymentFrequency.MONTHLY,
+    enum: PaymentFrequency,
+    default: PaymentFrequency.MONTHLY,
   })
-  paymentFrequency: PolicyPaymentFrequency;
+  paymentFrequency: PaymentFrequency;
 
-  // @OneToMany(() => Invoice, (invoice) => invoice.policy)
-  // invoices: Invoice[];
+  @OneToMany(() => Invoice, (invoice) => invoice.policy)
+  invoices: Invoice[];
 }

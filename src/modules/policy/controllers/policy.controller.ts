@@ -7,10 +7,12 @@ import {
   Delete,
   Param,
   Body,
+  Query,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
 import { PolicyService } from '../services';
+import { PaginationDto } from '../../../shared/pagination';
 import {
   PolicyRequestDto,
   UpdatePolicyDto,
@@ -25,52 +27,52 @@ export class PolicyController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createPolicy(@Body() dto: PolicyRequestDto) {
-    return this.policyService.createPolicy(dto);
+  async create(@Body() payload: PolicyRequestDto) {
+    return this.policyService.create(payload);
   }
 
   @Get()
-  async findAllPolicies() {
-    return this.policyService.findAllPolicies();
+  async findAll(@Query() paginationDto: PaginationDto) {
+    return this.policyService.findAll(paginationDto);
   }
 
   @Get(':id')
-  async findPolicyById(@Param('id') id: string) {
-    return this.policyService.findPolicyById(id);
+  async findOne(@Param('id') id: string) {
+    return this.policyService.findOne(id);
   }
 
   @Put(':id')
-  async updatePolicy(@Param('id') id: string, @Body() dto: UpdatePolicyDto) {
-    return this.policyService.updatePolicy(id, dto);
+  async update(@Param('id') id: string, @Body() payload: UpdatePolicyDto) {
+    return this.policyService.update(id, payload);
   }
 
   @Patch(':id/approve')
-  async approvePolicy(
+  async approve(
     @Param('id') id: string,
-    @Body() dto: PolicyApproveRequestDto,
+    @Body() payload: PolicyApproveRequestDto,
   ) {
-    return this.policyService.approvePolicy(id, dto);
+    return this.policyService.approve(id, payload);
   }
 
   @Patch(':id/reject')
-  async rejectPolicy(
+  async reject(
     @Param('id') id: string,
-    @Body() dto: PolicyRejectRequestDto,
+    @Body() payload: PolicyRejectRequestDto,
   ) {
-    return this.policyService.rejectPolicy(id, dto);
+    return this.policyService.reject(id, payload);
   }
 
   @Patch(':id/cancel')
-  async cancelPolicy(
+  async cancel(
     @Param('id') id: string,
-    @Body() dto: PolicyCancelRequestDto,
+    @Body() payload: PolicyCancelRequestDto,
   ) {
-    return this.policyService.cancelPolicy(id, dto);
+    return this.policyService.cancel(id, payload);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deletePolicy(@Param('id') id: string) {
-    return this.policyService.deletePolicy(id);
+  async remove(@Param('id') id: string) {
+    return this.policyService.remove(id);
   }
 }

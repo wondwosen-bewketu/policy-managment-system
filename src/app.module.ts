@@ -1,17 +1,20 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
-import { appConfig, databaseConfig } from './config';
-import { PolicyModule } from './modules';
+import { appConfig, databaseConfig, queueConfig } from './config';
+import { PolicyModule, InvoiceModule } from './modules';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, databaseConfig, queueConfig],
       envFilePath: ['.env'],
     }),
     DatabaseModule,
+    QueueModule,
+    InvoiceModule,
     PolicyModule,
   ],
 })

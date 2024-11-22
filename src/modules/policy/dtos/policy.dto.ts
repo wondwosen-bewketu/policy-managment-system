@@ -11,7 +11,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { PolicyPaymentFrequency } from '../../../shared/enums';
+import { PaymentFrequency } from '../../../shared/enums';
 
 export class PolicyRequestDto {
   @IsString()
@@ -24,11 +24,6 @@ export class PolicyRequestDto {
   @IsNotEmpty()
   @Type(() => String)
   vehiclePlateNumber: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Type(() => String)
-  policyNumber: string;
 
   @IsNumber()
   @IsNotEmpty()
@@ -63,9 +58,9 @@ export class PolicyRequestDto {
   @Type(() => Boolean)
   isActive: boolean;
 
-  @IsEnum(PolicyPaymentFrequency)
+  @IsEnum(PaymentFrequency)
   @IsNotEmpty()
-  paymentFrequency: PolicyPaymentFrequency;
+  paymentFrequency: PaymentFrequency;
 }
 
 export class PolicyApproveRequestDto {
@@ -141,7 +136,7 @@ export class UpdatePolicyDto {
   @Type(() => Boolean)
   isActive?: boolean;
 
-  @IsEnum(PolicyPaymentFrequency)
+  @IsEnum(PaymentFrequency)
   @IsOptional()
-  paymentFrequency?: PolicyPaymentFrequency;
+  paymentFrequency?: PaymentFrequency;
 }

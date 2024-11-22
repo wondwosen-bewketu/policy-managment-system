@@ -1,1 +1,1 @@
-export * from './payment-frequency.enum';
+export * from './paymentFrequency.enum';

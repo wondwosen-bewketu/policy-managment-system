@@ -1,5 +1,5 @@
-import { Entity, Column } from 'typeorm';
-// import { Policy } from './policy.entity';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Policy } from './policy.entity';
 import { BaseEntityWithSoftDelete } from './entity';
 
 @Entity('invoices')
@@ -25,7 +25,10 @@ export class Invoice extends BaseEntityWithSoftDelete {
   @Column({ type: 'varchar', length: 50, default: 'PENDING' })
   status: string;
 
-  // @ManyToOne(() => Policy, (policy) => policy.invoices)
-  // @JoinColumn()
-  // policy: Policy;
+  @Column({ type: 'uuid' })
+  policyId: string;
+
+  @ManyToOne(() => Policy, (policy) => policy.invoices)
+  @JoinColumn({ name: 'policyId' })
+  policy: Policy | null;
 }

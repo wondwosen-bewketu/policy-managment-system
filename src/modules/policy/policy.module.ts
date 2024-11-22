@@ -1,14 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Policy } from '../../database/entities';
-import { PolicyService } from './services';
-import { PolicyController } from './controllers';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { PolicyService } from './services/policy.service';
+import { Invoice, Policy } from '../../database/entities';
+import { InvoiceService } from '../invoice/services';
+import { PricingModule } from '../pricing/pricing.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Policy]), // Register the Policy entity
+    TypeOrmModule.forFeature([Policy, Invoice]),
+    EventEmitterModule.forRoot(),
+    PricingModule,
   ],
-  controllers: [PolicyController],
-  providers: [PolicyService],
+  providers: [PolicyService, InvoiceService],
+  exports: [PolicyService],
 })
 export class PolicyModule {}
