@@ -1,35 +1,17 @@
-export enum PolicyEvents {
-  CREATED = 'policy.created',
-  APPROVED = 'policy.approved',
-  REJECTED = 'policy.rejected',
-  CANCELED = 'policy.canceled',
-  UPDATED = 'policy.updated',
-}
+// src/policy/events/policy.events.ts
 
-// Event Payload Interfaces
-export interface PolicyCreatedEvent {
-  email: string;
-  policyNumber: string;
-}
+export const PolicyEvents = {
+  CREATED: 'policy.created',
+  APPROVED: 'policy.approved',
+  REJECTED: 'policy.rejected',
+  CANCELED: 'policy.canceled',
+  INVOICE_GENERATED: 'policy.invoiceGenerated',
+};
 
-export interface PolicyApprovalEvent {
-  email: string;
-  policyNumber: string;
-}
+// src/shared/types/policy-event-payload.ts
 
-export interface PolicyRejectionEvent {
-  email: string;
-  policyNumber: string;
-  rejectedReason: string;
-}
-
-export interface PolicyCancellationEvent {
-  email: string;
-  policyNumber: string;
-  cancledReason: string;
-}
-
-export interface PolicyUpdateEvent {
-  email: string;
-  policyNumber: string;
+export interface PolicyEventPayload {
+  userEmail: string;
+  policyId: string; // Add this line to ensure policyId exists in the payload
+  // Add other properties if necessary
 }

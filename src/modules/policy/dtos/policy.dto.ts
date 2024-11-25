@@ -16,6 +16,18 @@ import { PaymentFrequency } from '../../../shared/enums';
 export class PolicyRequestDto {
   @IsString()
   @IsNotEmpty()
+  @Length(2, 100)
+  @Type(() => String)
+  userName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Length(2, 255)
+  @Type(() => String)
+  userEmail: string;
+
+  @IsString()
+  @IsNotEmpty()
   @Length(2, 64)
   @Type(() => String)
   vehicleModel: string;
@@ -62,7 +74,6 @@ export class PolicyRequestDto {
   @IsNotEmpty()
   paymentFrequency: PaymentFrequency;
 }
-
 export class PolicyApproveRequestDto {
   @IsBoolean()
   @IsNotEmpty()

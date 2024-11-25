@@ -13,12 +13,10 @@ import {
 import {
   PolicyRequestDto,
   UpdatePolicyDto,
-  PolicyApproveRequestDto,
   PolicyRejectRequestDto,
   PolicyCancelRequestDto,
 } from '../dtos';
 import { generateRandomString } from '../../../shared/helper';
-import { InvoiceService } from '../../invoice/services/invoice.service';
 import { PolicyEvents } from '../events/policy.events';
 
 @Injectable()
@@ -27,30 +25,33 @@ export class PolicyService {
     @InjectRepository(Policy)
     private readonly policyRepository: Repository<Policy>,
     private readonly eventEmitter: EventEmitter2,
-    private readonly invoiceService: InvoiceService,
   ) {}
 
   async create(dto: PolicyRequestDto): Promise<Policy> {
+    // Create the new policy object
     const newPolicy = this.policyRepository.create(dto);
     newPolicy.policyNumber = 'POLICY-' + generateRandomString(12);
     const policy = await this.policyRepository.save(newPolicy);
 
     this.eventEmitter.emit(PolicyEvents.CREATED, policy);
+
     return policy;
   }
-
-  async approve(
-    id: string,
-    { isActive }: PolicyApproveRequestDto,
-  ): Promise<Policy> {
+  /**
+   * Approves a policy, marks it as active, and schedules invoice generation after 30 days.
+   * @param id The ID of the policy to approve.
+   */
+  async approve(id: string): Promise<Policy> {
     const policy = await this.findOne(id);
+
+    // Mark the policy as active and approved
     const updatedPolicy = await this.policyRepository.save({
       ...policy,
-      isActive,
+      isActive: true,
       approvedAt: new Date(),
     });
 
-    // Emit 'policy.approved' event
+    // Emit the approval event
     this.eventEmitter.emit(PolicyEvents.APPROVED, updatedPolicy);
     return updatedPolicy;
   }
@@ -66,7 +67,6 @@ export class PolicyService {
       rejectedReason,
       isActive: false,
     });
-
     this.eventEmitter.emit(PolicyEvents.REJECTED, updatedPolicy);
     return updatedPolicy;
   }
@@ -82,7 +82,6 @@ export class PolicyService {
       cancledReason,
       isActive: false,
     });
-
     this.eventEmitter.emit(PolicyEvents.CANCELED, updatedPolicy);
     return updatedPolicy;
   }
@@ -94,9 +93,7 @@ export class PolicyService {
 
   async findOne(id: string): Promise<Policy> {
     const policy = await this.policyRepository.findOneBy({ id });
-    if (!policy) {
-      throw new NotFoundException(`Policy with ID ${id} not found`);
-    }
+    if (!policy) throw new NotFoundException(`Policy with ID ${id} not found`);
     return policy;
   }
 
@@ -123,8 +120,7 @@ export class PolicyService {
       ...policy,
       ...dto,
     });
-
-    this.eventEmitter.emit(PolicyEvents.UPDATED, updatedPolicy);
+    this.eventEmitter.emit(PolicyEvents.APPROVED, updatedPolicy);
     return updatedPolicy;
   }
 }

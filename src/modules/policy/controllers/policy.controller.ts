@@ -16,7 +16,6 @@ import { PaginationDto } from '../../../shared/pagination';
 import {
   PolicyRequestDto,
   UpdatePolicyDto,
-  PolicyApproveRequestDto,
   PolicyRejectRequestDto,
   PolicyCancelRequestDto,
 } from '../dtos';
@@ -47,11 +46,8 @@ export class PolicyController {
   }
 
   @Patch(':id/approve')
-  async approve(
-    @Param('id') id: string,
-    @Body() payload: PolicyApproveRequestDto,
-  ) {
-    return this.policyService.approve(id, payload);
+  async approve(@Param('id') id: string) {
+    return this.policyService.approve(id);
   }
 
   @Patch(':id/reject')

@@ -6,8 +6,12 @@ import { InvoiceController } from './controllers';
 import { PricingModule } from '../pricing/pricing.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Invoice]), PricingModule],
-  providers: [InvoiceService],
-  controllers: [InvoiceController],
+  imports: [
+    TypeOrmModule.forFeature([Invoice]), // Registers InvoiceRepository
+    PricingModule,
+  ],
+  providers: [InvoiceService], // Provides InvoiceService
+  controllers: [InvoiceController], // Handles routes
+  exports: [InvoiceService, TypeOrmModule], // Export InvoiceService and TypeOrmModule
 })
 export class InvoiceModule {}

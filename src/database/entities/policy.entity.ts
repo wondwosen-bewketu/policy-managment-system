@@ -5,6 +5,12 @@ import { Invoice } from './invoice.entity';
 
 @Entity('policies')
 export class Policy extends BaseEntityWithSoftDelete {
+  @Column({ type: String, length: 255 })
+  userEmail: string;
+
+  @Column({ type: String, length: 100 })
+  userName: string;
+
   @Column({ type: String, length: 64 })
   vehicleModel: string;
 
@@ -29,7 +35,7 @@ export class Policy extends BaseEntityWithSoftDelete {
   @Column({ type: 'timestamptz' })
   endDate: Date;
 
-  @Column({ type: 'boolean', default: true })
+  @Column({ type: 'boolean', default: false })
   isActive: boolean;
 
   @Column({ type: 'timestamptz', nullable: true })
