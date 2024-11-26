@@ -5,6 +5,12 @@ import { Policy } from '../../../database/entities';
 import { Invoice } from '../../../database/entities/invoice.entity';
 import { PricingService } from '../../pricing/pricing.service';
 import { generateRandomString } from '../../../shared/helper';
+import { addDays } from 'date-fns';
+import {
+  createPaginationResponse,
+  PaginationDto,
+  PaginationResponse,
+} from '../../../shared/pagination';
 
 @Injectable()
 export class InvoiceService {
@@ -14,39 +20,28 @@ export class InvoiceService {
     private readonly invoiceRepository: Repository<Invoice>,
   ) {}
 
-  async generateInvoice(policy: Policy): Promise<Invoice> {
-    const premiumAmount = this.pricingService.calculatePremium(
-      policy.paymentFrequency,
-      policy.coverageAmount,
-    );
+  async generateInvoice(policy: Policy): Promise<void> {
+    try {
+      const invoice = this.invoiceRepository.create({
+        policy: policy,
+        invoiceNumber: `INV-${generateRandomString(8)}`,
+        amountDue: policy.premiumAmount,
+        dueDate: addDays(new Date(), 30),
+        status: 'PENDING',
+      });
 
-    const invoice = new Invoice();
-    invoice.invoiceNumber = `INV-${generateRandomString(8)}`;
-    invoice.amountDue = premiumAmount;
-    invoice.dueDate = policy.startDate;
-    invoice.status = 'PENDING';
-    invoice.policy = policy;
-
-    return await this.invoiceRepository.save(invoice);
-  }
-
-  async generatePausedInvoice(policy: Policy): Promise<Invoice> {
-    const premiumAmount = this.pricingService.calculatePremium(
-      policy.paymentFrequency,
-      policy.coverageAmount,
-    );
-
-    const invoice = new Invoice();
-    invoice.invoiceNumber = `INV-${generateRandomString(8)}`;
-    invoice.amountDue = premiumAmount;
-    invoice.dueDate = new Date();
-    invoice.status = 'PAUSED';
-    invoice.policy = policy;
-
-    return await this.invoiceRepository.save(invoice);
+      await this.invoiceRepository.save(invoice);
+      console.log('Invoice saved successfully!');
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+    }
   }
 
   async generateCanceledInvoice(policy: Policy): Promise<Invoice> {
+    if (!policy || !policy.id) {
+      throw new NotFoundException('Policy data is invalid or missing');
+    }
+
     const premiumAmount = this.pricingService.calculatePremium(
       policy.paymentFrequency,
       policy.coverageAmount,
@@ -63,14 +58,31 @@ export class InvoiceService {
   }
 
   async findOne(id: string): Promise<Invoice> {
-    const invoice = await this.invoiceRepository.findOneBy({ id });
+    const invoice = await this.invoiceRepository.findOne({
+      where: { id },
+      relations: ['policy'],
+    });
+
     if (!invoice) {
-      throw new NotFoundException(`invoice with ID ${id} not found`);
+      throw new NotFoundException(`Invoice with ID ${id} not found`);
     }
     return invoice;
   }
 
-  async findAll(): Promise<Invoice[]> {
-    return await this.invoiceRepository.find();
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginationResponse<Invoice>> {
+    const { skip, limit } = paginationDto;
+    const [data, total] = await this.invoiceRepository.findAndCount({
+      skip,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+    return createPaginationResponse(
+      data,
+      total,
+      paginationDto.page,
+      paginationDto.limit,
+    );
   }
 }

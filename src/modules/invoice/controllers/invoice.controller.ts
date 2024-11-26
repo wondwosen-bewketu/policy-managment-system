@@ -1,14 +1,14 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { InvoiceService } from '../services';
-import { Invoice } from '../../../database/entities/invoice.entity';
+import { PaginationDto } from 'src/shared/pagination';
 
 @Controller('invoices')
 export class InvoiceController {
   constructor(private readonly invoiceService: InvoiceService) {}
 
   @Get()
-  async findAll(): Promise<Invoice[]> {
-    return await this.invoiceService.findAll();
+  async findAll(@Query() paginationDto: PaginationDto) {
+    return this.invoiceService.findAll(paginationDto);
   }
 
   @Get(':id')
