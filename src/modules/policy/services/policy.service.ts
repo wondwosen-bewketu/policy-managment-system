@@ -18,6 +18,7 @@ import {
 } from '../dtos';
 import { generateRandomString } from '../../../shared/helper';
 import { PolicyEvents } from '../events/policy.events';
+import { addDays } from 'date-fns';
 
 @Injectable()
 export class PolicyService {
@@ -28,7 +29,6 @@ export class PolicyService {
   ) {}
 
   async create(dto: PolicyRequestDto): Promise<Policy> {
-    // Create the new policy object
     const newPolicy = this.policyRepository.create(dto);
     newPolicy.policyNumber = 'POLICY-' + generateRandomString(12);
     const policy = await this.policyRepository.save(newPolicy);
@@ -37,25 +37,20 @@ export class PolicyService {
 
     return policy;
   }
-  /**
-   * Approves a policy, marks it as active, and schedules invoice generation after 30 days.
-   * @param id The ID of the policy to approve.
-   */
+
   async approve(id: string): Promise<Policy> {
     const policy = await this.findOne(id);
 
-    // Mark the policy as active and approved
     const updatedPolicy = await this.policyRepository.save({
       ...policy,
       isActive: true,
       approvedAt: new Date(),
     });
 
-    // Emit the approval event
     this.eventEmitter.emit(PolicyEvents.APPROVED, updatedPolicy);
+
     return updatedPolicy;
   }
-
   async reject(
     id: string,
     { rejectedReason }: PolicyRejectRequestDto,
@@ -123,4 +118,30 @@ export class PolicyService {
     this.eventEmitter.emit(PolicyEvents.APPROVED, updatedPolicy);
     return updatedPolicy;
   }
+
+  async getPoliciesToGenerateInvoice(): Promise<Policy[]> {
+    const today = new Date();
+    const threeDaysFromNow = addDays(today, 3);
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    return this.policyRepository
+      .createQueryBuilder('policy')
+      .where('policy.isActive = :isActive', { isActive: true })
+      .andWhere('policy.dueDate <= :threeDaysFromNow', { threeDaysFromNow })
+      .andWhere('policy.lastPaymentDate < :startOfMonth', { startOfMonth })
+      .getMany();
+  }
+
+  // async getPoliciesToCancel(): Promise<Policy[]> {
+  //   const today = new Date();
+  //   const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+  //   const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+
+  //   return this.policyRepository
+  //     .createQueryBuilder('policy')
+  //     .where('policy.isActive = :isActive', { isActive: true })
+  //     .andWhere('policy.lastPaymentDate <= :startOfDay', { startOfDay })
+  //     .andWhere('DATE(policy.lastPaymentDate) != DATE(:endOfDay)', { endOfDay })
+  //     .getMany();
+  // }
 }

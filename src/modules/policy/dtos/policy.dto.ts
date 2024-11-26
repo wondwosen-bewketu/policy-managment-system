@@ -65,6 +65,16 @@ export class PolicyRequestDto {
   @Type(() => Date)
   endDate: Date;
 
+  @IsDate()
+  @IsOptional()
+  @Type(() => Date)
+  lastPaymentDate?: Date;
+
+  @IsDate()
+  @IsNotEmpty()
+  @Type(() => Date)
+  dueDate: Date;
+
   @IsBoolean()
   @IsNotEmpty()
   @Type(() => Boolean)
@@ -74,6 +84,7 @@ export class PolicyRequestDto {
   @IsNotEmpty()
   paymentFrequency: PaymentFrequency;
 }
+
 export class PolicyApproveRequestDto {
   @IsBoolean()
   @IsNotEmpty()

@@ -35,6 +35,12 @@ export class Policy extends BaseEntityWithSoftDelete {
   @Column({ type: 'timestamptz' })
   endDate: Date;
 
+  @Column({ type: 'timestamptz', nullable: true })
+  lastPaymentDate: Date | null;
+
+  @Column({ type: 'timestamptz' })
+  dueDate: Date;
+
   @Column({ type: 'boolean', default: false })
   isActive: boolean;
 
