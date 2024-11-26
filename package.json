@@ -30,7 +30,6 @@
     "schema:sync": "pnpm run build && pnpm run typeorm schema:sync"
   },
   "dependencies": {
-    "@nestjs/bull": "^10.2.2",
     "@nestjs/bullmq": "^10.2.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
@@ -40,10 +39,10 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/schedule": "^4.1.1",
     "@nestjs/typeorm": "^10.0.2",
-    "bull": "^4.16.4",
     "bullmq": "^5.29.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "nodemailer": "^6.9.16",
     "pg": "^8.13.1",
