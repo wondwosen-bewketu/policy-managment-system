@@ -8,7 +8,5 @@ import { QueueService } from './queue.service';
       useClass: QueueService,
     }),
   ],
-  providers: [QueueService],
-  exports: [QueueService],
 })
 export class QueueModule {}
