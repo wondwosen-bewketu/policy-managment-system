@@ -3,8 +3,8 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { PolicyEmailHandler } from './policy-email-handler.service';
 import { PolicyEvents } from '../events/policy.events';
 import { PolicyEventPayload } from '../../../shared/types';
-import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Policy } from 'src/database/entities';
 import { Repository } from 'typeorm';
@@ -32,7 +32,6 @@ export class PolicyListener {
       `Policy Approved: ${updatedPolicy.policyNumber}. Adding invoice generation job to the queue.`,
     );
 
-    // Check if policy exists
     const completePolicy = await this.policyRepository.findOne({
       where: { id: updatedPolicy.id },
     });
@@ -42,9 +41,15 @@ export class PolicyListener {
       return;
     }
 
+    const policyDetails = {
+      ...completePolicy,
+      policyNumber: `${completePolicy.policyNumber}`,
+      amountDue: completePolicy.premiumAmount,
+    };
+
     await this.policyEmailHandler.sendPolicyApprovedEmail(
       completePolicy.userEmail,
-      completePolicy,
+      policyDetails,
     );
 
     console.log('Adding job to invoiceQueue...');

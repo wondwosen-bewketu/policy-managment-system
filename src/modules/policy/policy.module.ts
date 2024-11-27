@@ -19,14 +19,9 @@ import { InvoiceGenerationTask } from './tasks';
     TypeOrmModule.forFeature([Policy, Invoice]),
     EventEmitterModule.forRoot(),
     PricingModule,
-    BullModule.registerQueue(
-      {
-        name: 'invoiceQueue',
-      },
-      {
-        name: 'emailQueue',
-      },
-    ),
+    BullModule.registerQueue({
+      name: 'invoiceQueue',
+    }),
   ],
   providers: [
     PolicyService,

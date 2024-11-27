@@ -1,73 +1,150 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Policy Management System
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is a **Policy Management System** built with **NestJS** to manage insurance policies, handle CRUD operations, schedule tasks with Cron jobs, process events with listeners, and efficiently manage queues and caching using Redis.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Table of Contents
+1. [Overview](#overview)
+2. [Features](#features)
+3. [Technologies Used](#technologies-used)
+4. [Setup and Installation](#setup-and-installation)
+5. [Environment Variables](#environment-variables)
+6. [Modules and Features](#modules-and-features)
+   - [CRUD Operations](#crud-operations)
+   - [Scheduling with Cron Jobs](#scheduling-with-cron-jobs)
+   - [Event-Driven Architecture](#event-driven-architecture)
+   - [Queues and Redis](#queues-and-redis)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Installation
+## Overview
 
-```bash
-$ pnpm install
+The **Policy Management System** provides for managing insurance policies. It incorporates advanced functionalities like asynchronous task processing, event-driven architecture, and caching to deliver a high-performing and scalable application.
+
+---
+
+## Features
+- **CRUD Operations**:
+  - Perform Create, Read, Update, and Delete operations for policies.
+- **Scheduling with Cron Jobs**:
+  - Automate periodic tasks, like invoice reminders or policy expiration checks.
+- **Event-Driven Architecture**:
+  - Emit and listen to events for seamless inter-module communication.
+- **Queue Management**:
+  - Handle asynchronous tasks, such as invoice generation and email notifications.
+- **Redis Integration**:
+  - Efficiently manage queues and implement caching for optimized performance.
+
+---
+
+## Technologies Used
+- **Backend**: [NestJS]
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Queue Management**: BullMQ
+- **Task Scheduling**: @nestjs/schedule
+- **Redis**: For caching and queue management
+- **Node.js**: Runtime environment
+- **TypeScript**: Strongly typed programming
+
+---
+
+## Setup and Installation
+
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/wondwosen-bewketu/policy-managment-system.git
+   cd policy-management-system
+   ```
+
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+3. Set up the database:
+   - Create a PostgreSQL database and update the `.env` file with the connection details.
+
+5. Run database migrations:
+   ```bash
+   pnpm migration:run
+   ```
+
+6. Start the application:
+   ```bash
+   pnpm start:dev
+   ```
+
+---
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following values:
+
+```env
+# App Config
+
+# .env file
+NODE_ENV=development
+APP_PORT=8080
+APP_NAME=NestJS Boilerplate
+
+# Database
+DATABASE_TYPE=postgres
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=mysecretpassword
+DATABASE_NAME=postgress
+
+REDIS_URL=
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
+REDIS_USERNAME=
+REDIS_PASSWORD=
+
+
+DATABASE_ENTITIES_DIR=src/database/entities
+DATABASE_MIGRATIONS=src/database/migrations/**/*.ts
+DATABASE_MIGRATIONS_DIR=src/database/migrations
+DATABASE_SEEDING_FACTORIES=src/database/factories/**/*.ts
+DATABASE_SEEDING_SEEDS=src/database/seeds/**/*.ts
+
+EMAIL_USER=bewketuwondwosen@gmail.com
+EMAIL_APP_PASSWORD=uaeb jbqn ugox lhwn
+
 ```
 
-## Running the app
+---
 
-```bash
-# development
-$ pnpm run start
+## Modules and Features
 
-# watch mode
-$ pnpm run start:dev
+### CRUD Operations
+- **Policies Module**:
+  - **Create**: Add new policies to the system.
+  - **Read**: Retrieve single or multiple policies with filters.
+  - **Update**: Modify policy details.
+  - **Delete**: Soft delete policies, preserving data for audit purposes.
 
-# production mode
-$ pnpm run start:prod
-```
+### Scheduling with Cron Jobs
+- **Task Automation**:
+  - Invoice reminders and overdue notifications are scheduled using Cron jobs.
+  - Example: A daily task to check and notify about pending invoices.
 
-## Test
+### Event-Driven Architecture
+- **Policy Events**:
+  - Emit events like `policy.approved` or `policy.rejected` to trigger corresponding actions (e.g., invoice generation).
+- **Event Listeners**:
+  - Listen for events and process actions like sending notifications or logging.
 
-```bash
-# unit tests
-$ pnpm run test
+### Queues and Redis
+- **Queues**:
+  - Tasks such as invoice generation and email notifications are processed asynchronously using BullMQ.
+  - Queue retry mechanisms with backoff strategies are implemented for fault tolerance.
+- **Redis Caching**:
+  - Cache frequently accessed data (e.g., policy details) to improve performance.
+  - Reduce database queries for commonly used endpoints.
 
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
